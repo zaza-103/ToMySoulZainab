@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رسالة تهنئة خاصة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; }
+        body, html { 
+            margin: 0; padding: 0; 
+            width: 100%; height: 100%; 
+            overflow: hidden; 
+            font-family: 'Tajawal', sans-serif; 
+            background: linear-gradient(135deg, #080f26, #1a2355); 
+            color: white; 
+        }
+        
+        .slider-container { 
+            width: 100%; height: 100%; 
+            overflow: hidden; 
+            position: relative; 
+            max-width: 450px; 
+            margin: 0 auto; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            direction: ltr;
+        }
+        
+        .slider-track { 
+            display: flex; 
+            width: 400%; 
+            height: 100%; 
+            transition: transform 0.4s ease-in-out; 
+        }
+        
+        .slide { 
+            width: 25%; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            padding: 30px; 
+            direction: rtl; 
+            position: relative;
+        }
+        
+        h1 { font-size: 2.2rem; color: #ff5e91; margin-bottom: 10px; }
+        p { font-size: 1.2rem; margin-bottom: 20px; color: #d0d7f3; line-height: 1.6; }
+        
+        .btn { 
+            background: #ff2a70; color: white; border: none; padding: 15px 35px; 
+            border-radius: 30px; font-size: 1.2rem; cursor: pointer; 
+            transition: 0.3s; font-family: inherit; font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 42, 112, 0.4);
+            z-index: 10;
+        }
+        .btn:hover { background: #ff0055; transform: scale(1.05); }
+        
+        /* مشغل الصوت الاحترافي */
+        .custom-audio-player { 
+            width: 100%; 
+            max-width: 340px; 
+            margin-top: 30px; 
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 42, 112, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            direction: ltr;
+        }
+        
+        /* زر التشغيل الدائري الوردي المتوهج */
+        .play-pause-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ff2a70;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 42, 112, 0.4);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            padding: 0;
+        }
+        .play-pause-btn:hover {
+            background: #ff0055;
+            transform: scale(1.05);
+        }
+        
+        /* تنسيق الأيقونة بداخل الزر لضمان الشفافية */
+        .play-pause-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            background: transparent !important;
+        }
+        
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+        
+        /* شريط التمرير */
+        .progress-bar {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ff5e91;
+            box-shadow: 0 0 8px #ff2a70;
+            transition: transform 0.1s;
+        }
+        .progress-bar::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #b0bcdc;
+            font-family: monospace;
+        }
+        
+        .pagination { 
+            position: absolute; 
+            bottom: 35px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            display: flex; 
+            gap: 8px; 
+            z-index: 10; 
+        }
+        .dot { 
+            width: 10px; height: 10px; 
+            background: white; 
+            opacity: 0.3; 
+            border-radius: 50%; 
+            transition: 0.3s; 
+        }
+        .dot.active { 
+            background: #ff2a70; 
+            opacity: 1; 
+            width: 12px; height: 12px; 
+        }
+        
+        .confetti { 
+            position: absolute; 
+            top: -10px; 
+            width: 8px; height: 8px; 
+            z-index: 99; 
+            pointer-events: none; 
+            animation: fall 3s linear forwards; 
+        }
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="slider-container">
+    <div class="slider-track" id="track">
+        
+        <div class="slide">
+            <p>📩 رسالة خاصة</p>
+            <h1>لَمحَة جَميلَة لِـ</h1>
+            <h1 style="color: white; font-size: 3rem;">البيت</h1>
+            <p style="font-size: 1rem; opacity: 0.6;">اضغط على الزر بالأسفل</p>
+            <button class="btn" id="openBtn">افتح التهنئة ←</button>
+        </div>
+
+        <div class="slide">
+            <h1 style="font-size: 3.5rem;">⭐</h1>
+            <h1 style="color: white; margin-bottom: 5px;">عيد أضحـى مبــارك <br>يا عزيزتي</h1>
+        
+            <p style="font-size: 0.9rem; opacity: 0.5;">← اسحب لرؤية باقي الرسالة</p>
+        </div>
+
+        <div class="slide">
+        
+            <h2 style="font-size: 3rem; color: #ff2a70; margin: 0; opacity: 0.5;">"💕 Z"</h2>
+            <p style="font-size: 1.6rem; font-weight: bold; color: white;">كل عام وأنتِ بخير مهندستنا</p>
+        
+        </div>
+
+        <div class="slide">
+            <h1>إهداء خاص لك</h1>
+            <p style="font-size: 1.1rem; color: #ff5e91; font-weight: bold;">كاظم الساهر - عيد وحب 🎶</p>
+            
+            <audio id="myAudio" src="song.mp3" preload="auto"></audio>
+            
+            <div class="custom-audio-player">
+                <button class="play-pause-btn" id="playPauseBtn">
+                    <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <div class="player-controls">
+                    <input type="range" class="progress-bar" id="seekBar" value="0" max="100">
+                    <div class="time-info">
+                        <span id="currentTime">0:00</span>
+                        <span id="durationTime">3:44</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="pagination">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+</div>
+
+<script>
+    const track = document.getElementById('track');
+    const dots = document.querySelectorAll('.dot');
+    const openBtn = document.getElementById('openBtn');
+    
+    const myAudio = document.getElementById('myAudio');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const seekBar = document.getElementById('seekBar');
+    const currentTimeText = document.getElementById('currentTime');
+    const durationTimeText = document.getElementById('durationTime');
+    
+    let currentIndex = 0;
+    const totalSlides = 4;
+
+    // أكواد الـ SVG الخاصة بالأيقونات لضمان عدم وجود خلفيات عشوائية من النظام
+    const playPath = "M8 5v14l11-7z";
+    const pausePath = "M6 19h4V5H6v14zm8-14v14h4V5h-4z";
+
+    function updateSlider() {
+        track.style.transform = `translateX(-${currentIndex * 25}%)`;
+        dots.forEach((dot, index) => {
+            if(index === currentIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // تحديث الأيقونة بشكل آمن تماماً وبخلفية شفافة
+    function updatePlayButton(isPlaying) {
+        const path = playIcon.querySelector('path');
+        if (isPlaying) {
+            path.setAttribute('d', pausePath);
+        } else {
+            path.setAttribute('d', playPath);
+        }
+    }
+
+    openBtn.addEventListener('click', () => {
+        currentIndex = 1;
+        updateSlider();
+        createConfetti();
+        myAudio.play().then(() => {
+            updatePlayButton(true);
+        }).catch(err => console.log("Auto-play prevented"));
+    });
+
+    playPauseBtn.addEventListener('click', () => {
+        if (myAudio.paused) {
+            myAudio.play();
+            updatePlayButton(true);
+        } else {
+            myAudio.pause();
+            updatePlayButton(false);
+        }
+    });
+
+    myAudio.addEventListener('timeupdate', () => {
+        if (!isNaN(myAudio.duration)) {
+            const value = (myAudio.currentTime / myAudio.duration) * 100;
+            seekBar.value = value;
+            currentTimeText.innerText = formatTime(myAudio.currentTime);
+        }
+    });
+
+    myAudio.addEventListener('loadedmetadata', () => {
+        durationTimeText.innerText = formatTime(myAudio.duration);
+    });
+
+    seekBar.addEventListener('input', () => {
+        const time = (seekBar.value / 100) * myAudio.duration;
+        myAudio.currentTime = time;
+    });
+
+    // السحب باللمس
+    let startX = 0;
+    let endX = 0;
+    const container = document.querySelector('.slider-container');
+
+    container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    }, {passive: true});
+
+    container.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleSwipe();
+    }, {passive: true});
+
+    function handleSwipe() {
+        const threshold = 40;
+        if (startX - endX > threshold) {
+            if (currentIndex < totalSlides - 1) {
+                currentIndex++;
+                updateSlider();
+            }
+        } else if (endX - startX > threshold) {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlider();
+            }
+        }
+    }
+
+    function createConfetti() {
+        const colors = ['#ff2a70', '#ff5e91', '#ffed4a', '#4ae7ff', '#b54aff'];
+        for (let i = 0; i < 65; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 1.5 + 's';
+            confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+            
+            const size = Math.random() * 7 + 6 + 'px';
+            confetti.style.width = size;
+            confetti.style.height = size;
+            
+            if(Math.random() > 0.5) {
+                confetti.style.borderRadius = '50%'; 
+            }
+            
+            container.appendChild(confetti);
+            setTimeout(() => { confetti.remove(); }, 3500);
+        }
+    }
+</script>
+</body>
+</<tag>
+    <!--Tab to edit-->
+</tag>html>
